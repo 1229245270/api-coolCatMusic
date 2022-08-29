@@ -1,7 +1,6 @@
 package com.hzc.coolcatmusic.bean;
 
 import lombok.Data;
-
 @Data
 public class Result<T> {
     private boolean status;

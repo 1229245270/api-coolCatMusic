@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
@@ -21,11 +24,15 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        if(body instanceof Result){
+            return body;
+        }
         return Result.success(body);
     }
 
     @ExceptionHandler(Exception.class)
     public Result<String> ErrorHandler(Exception e){
-        return Result.error(e.toString());
+        log.error(e.toString());
+        return Result.error("服务器异常，请稍后重试");
     }
 }
