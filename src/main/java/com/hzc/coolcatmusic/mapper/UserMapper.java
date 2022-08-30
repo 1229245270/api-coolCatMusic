@@ -8,12 +8,14 @@ import java.util.Map;
 
 @Mapper
 public interface UserMapper {
-    @Select("SELECT * FROM USER WHERE NAME = #{NAME}")
-    User findByName(@Param("name") String name);
+    @Select("SELECT * FROM USER WHERE account = #{account}")
+    User findByAccount(@Param("account") String account);
 
     @Select("SELECT * FROM USER WHERE ID = #{ID}")
     User findById(@Param("id") Long id);
 
+    @Select("SELECT * FROM USER WHERE account = #{account} and password = #{password}")
+    User checkUser(@Param("account") String account,@Param("password") String password);
 
     @Insert("INSERT INTO USER(NAME,AGE) VALUES(#{{name},#{age})")
     int insert(@Param("name") String name,@Param("age") Integer age);
