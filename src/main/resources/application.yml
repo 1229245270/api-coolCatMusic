@@ -12,6 +12,8 @@ spring:
 file:
   staticPatternPath: /images/**
   uploadFolder: E:/upload/
+  urlTempSongPath: /song/temp/**
+  uploadTempSongPath: E:/song/temp/
 server:
   port: 8081
 spring:

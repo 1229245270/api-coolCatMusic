@@ -28,8 +28,6 @@ public class SongController {
 
     private UploadService uploadService;
 
-    private final String ip = ServiceUtil.getUrl();
-
     @Autowired
     public void setUploadService(UploadService uploadService) {
         this.uploadService = uploadService;
@@ -43,35 +41,26 @@ public class SongController {
     @GetMapping("/newSong")
     public List<Song> topNewSong(int page,int size){
         List<Song> list = songMapper.findTopSongByCreateDate((1 - page) * size,size);
-        return addIp(list);
+        return uploadService.addIp(list);
     }
 
     @GetMapping("/hotSong")
     public List<Song> topHotSong(int page,int size){
         List<Song> list = songMapper.findTopSongByPlayTimes((1 - page) * size,size);
-        return addIp(list);
+        return uploadService.addIp(list);
     }
 
     @GetMapping("/homeSong")
     public Map<String,Object> homeSong(){
         Map<String,Object> map = new HashMap<>();
         List<Song> hotList = songMapper.findTopSongByPlayTimes(0,5);
-        map.put("hotList",addIp(hotList));
+        map.put("hotList",uploadService.addIp(hotList));
         List<Song> newList = songMapper.findTopSongByCreateDate(0,5);
-        map.put("newList",addIp(newList));
+        map.put("newList",uploadService.addIp(newList));
         return map;
     }
 
-    private List<Song> addIp(List<Song> list){
-        List<Song> newList = new ArrayList<>();
-        for(Song song : list){
-            song.setPath(ip + song.getPath());
-            song.setSong_image(ip + song.getSong_image());
-            song.setSinger_image(ip + song.getSinger_image());
-            newList.add(song);
-        }
-        return newList;
-    }
+
 
     @PostMapping("/updateSong")
     public Result<String> postSong(
@@ -110,18 +99,13 @@ public class SongController {
             return Result.error("上传失败");
     }
 
-    @PostMapping("/kgm")
-    public void kgm(){
-        try {
-            String path = System.getProperty("user.dir");
-            Runtime mt = Runtime.getRuntime();
-            String cmd = path + "\\exe\\kgm-decoder.exe F:\\kugoumusic";
-            Process pro = mt.exec(cmd);
-            InputStream ers = pro.getErrorStream();
-            pro.waitFor();
-        } catch (IOException | InterruptedException ioe) {
-            ioe.printStackTrace();
-        } // TODO Auto-generated catch block
-
+    @PostMapping("/unlock/window64")
+    public Result<String> unlockWindow64(MultipartFile path,String username){
+        String url = uploadService.unlockSong(path, username);
+        if(url != null){
+            return Result.success(url);
+        }
+        return Result.error(null);
     }
+
 }

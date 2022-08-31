@@ -13,10 +13,16 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     @Value("${file.uploadFolder}")
     private String uploadFolder;
 
+    @Value("${file.urlTempSongPath}")
+    private String urlTempSongPath;
+    @Value("${file.uploadTempSongPath}")
+    private String uploadTempSongPath;
+
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/download/**").addResourceLocations("file:///F:/upload/");
         registry.addResourceHandler(staticPatternPath).addResourceLocations("file:"+uploadFolder);
+        registry.addResourceHandler(urlTempSongPath).addResourceLocations("file:"+uploadTempSongPath);
         super.addResourceHandlers(registry);
     }
 }
