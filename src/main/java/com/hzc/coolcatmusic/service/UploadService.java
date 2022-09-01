@@ -93,7 +93,7 @@ public class UploadService {
             file.transferTo(targetFilename);
             String path = System.getProperty("user.dir");
             Runtime mt = Runtime.getRuntime();
-            String cmd = path + "\\exe\\um-windows-amd64.exe -i " + targetFilename.getPath() + " -o " + targetFile.getPath();
+            String cmd = "\"" + path + "\\exe\\um-windows-amd64.exe\" -i \"" + targetFilename.getPath() + "\" -o \"" + targetFile.getPath() + "\"";
             Process pro = mt.exec(cmd);
             String inStr = consumeInputStream(pro.getInputStream());
             String ers = consumeInputStream(pro.getErrorStream());
@@ -106,7 +106,7 @@ public class UploadService {
         } catch (IOException | InterruptedException ioe) {
             ioe.printStackTrace();
         } // TODO Auto-generated catch block
-        return "nul";
+        return "错误";
     }
 
     public String consumeInputStream(InputStream is) throws IOException {
